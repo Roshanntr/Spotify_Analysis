@@ -51,11 +51,59 @@ select * from spotify
 select track from spotify
 where stream>1000000000
 ```
-3. Count the total number of tracks by each artist.
-4. List all tracks along with their views and likes where `official_video = TRUE`.
-5. For each album, calculate the total views of all associated tracks.
-6. Retrieve the track names that have been streamed on Spotify more than YouTube.
-7. Find the top 3 most-viewed tracks for each artist using window functions.
-8. Write a query to find tracks where the liveness score is above the average.
+2. Count the total number of tracks by each artist.
+```sql
+select artist,count(*) as Total -- count(*) gives total no.of rows in the table.
+from spotify
+group by artist
+order by total desc
+```
+3. List all tracks along with their views and likes where `official_video = TRUE`.
+```sql
+select track,artist,sum(views),sum(likes) from spotify
+where official_video=true
+group by track,artist
+order by 3 desc
+```
+4. For each album, calculate the total views of all associated tracks.
+```sql
+select track,album, sum(views) as Total 
+from spotify
+group by track,album
+order by Total desc
+```
+5. Retrieve the track names that have been streamed on Spotify more than YouTube.
+```sql
+select * from 
+(select 
+     track,
+	 coalesce(sum(case when most_played_on='Youtube' then stream end),0) as streamed_on_Youtube,
+     coalesce(sum(case when most_played_on='Spotify' then stream end),0) as streamed_on_Spotify
+from spotify 
+group by track
+order by streamed_on_spotify desc) 
+where streamed_on_Spotify > streamed_on_Youtube
+ 	and streamed_on_youtube<>0
+```
+6. Find the top 3 most-viewed tracks for each artist using window functions.
+```sql
+with ranking_artist 
+as(
+select artist,track,sum(views) as Total_View,
+dense_rank() over (partition by artist order by sum(views) desc ) as rank
+from spotify
+group by artist,track -- both artist and track is used to display the tracks of each artist
+order by 1,3 desc
+)
+select * from ranking_artist
+where rank<=3
+```
+7. Write a query to find tracks where the liveness score is above the average.
+```sql
+select * from spotify
+
+select track,artist,liveness from spotify
+where liveness>(select avg(liveness) as Average from  spotify)
+```
 
 
