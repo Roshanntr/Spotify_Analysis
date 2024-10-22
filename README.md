@@ -1,7 +1,8 @@
 # Spotify Data Analysis
 
 ## Overview
-This project involves analyzing a Spotify dataset with various attributes about tracks, albums, and artists using **SQL**. It covers an end-to-end process of normalizing a denormalized dataset, performing SQL queries of varying complexity (easy, medium, and advanced), and optimizing query performance. The primary goals of the project are to practice advanced SQL skills and generate valuable insights from the dataset.
+This project involves analyzing a Spotify dataset with various attributes about tracks, albums, and artists using **SQL**. 
+This analysis delves into Spotify's music landscape, highlighting the best albums, tracks, and artists. By leveraging data-driven insights, we uncover trends and preferences that shape the listening experience.
 
 ```sql
 -- create table
@@ -105,5 +106,7 @@ select * from spotify
 select track,artist,liveness from spotify
 where liveness>(select avg(liveness) as Average from  spotify)
 ```
+
+In conclusion, this analysis reveals the dynamic landscape of music on Spotify, showcasing the top tracks, artists, and albums that resonate most with listeners. The insights highlight emerging trends and preferences, shedding light on the evolving music culture. 
 
 
